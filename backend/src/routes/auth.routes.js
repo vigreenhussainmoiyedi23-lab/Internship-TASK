@@ -3,8 +3,10 @@ const userModel = require("../models/user.model")
 const bcrypt = require("bcryptjs")
 const router = Router()
 const jwt = require("jsonwebtoken")
+const { registerValidator, loginValidator } = require("../validators/auth.validator")
+const validate = require("../validators/validate")
 
-router.post("/login", async (req, res) => {
+router.post("/login", loginValidator, validate, async (req, res) => {
     try {
         const { email, password } = req.body
         const user = await userModel.findOne({ email }).select("+password")
@@ -31,7 +33,7 @@ router.post("/login", async (req, res) => {
     }
 })
 
-router.post("/register", async (req, res) => {
+router.post("/register", registerValidator, validate, async (req, res) => {
     try {
         const { name, email, password } = req.body
         const existingUser = await userModel.findOne({ email })

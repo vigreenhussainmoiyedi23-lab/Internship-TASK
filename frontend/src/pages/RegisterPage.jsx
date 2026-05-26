@@ -8,6 +8,7 @@ const RegisterPage = () => {
     password: "",
     name: "",
   });
+  const [errorMessage, setErrorMessage] = useState("");
   const { registerHandler, loading } = useAuth();
   return (
     <section className="min-h-screen bg-[#F8F4EC] flex items-center justify-center px-6 py-10">
@@ -36,9 +37,14 @@ const RegisterPage = () => {
           </div>
 
           <form
-            onSubmit={(e) => {
+            onSubmit={async (e) => {
               e.preventDefault();
-              registerHandler(formData);
+              setErrorMessage("");
+              try {
+                await registerHandler(formData);
+              } catch (error) {
+                setErrorMessage(error);
+              }
             }}
             className="space-y-6"
           >
@@ -88,7 +94,11 @@ const RegisterPage = () => {
                 className="w-full rounded-2xl border border-slate-700 bg-[#1E293B] text-white placeholder:text-gray-400 px-5 py-4 outline-none focus:border-[#035A27] focus:ring-2 focus:ring-[#035A27]/30 transition-all duration-300"
               />
             </div>
-
+            {errorMessage && (
+              <p className="text-red-500 font-semibold italic">
+                ⚠️ {errorMessage}
+              </p>
+            )}
             {/* Button */}
             {loading ? (
               <p className="w-full text-center bg-[#035A27] hover:bg-[#047735] text-[#F8F4EC] py-4 rounded-2xl text-lg font-semibold transition-all duration-300 hover:scale-[1.01] shadow-lg shadow-green-900/20">

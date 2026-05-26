@@ -16,7 +16,7 @@ export const useAuth = () => {
                 navigate("/")
             }
         } catch (error) {
-            console.error("Login error:", error);
+            throw error
 
         } finally {
             setLoading(false)
@@ -49,7 +49,7 @@ export const useAuth = () => {
                 navigate("/")
             }
         } catch (error) {
-            console.error("Registration error:", error)
+            throw error.response.data.message || error.response.data.errors[0].msg
         } finally {
             setLoading(false)
         }
@@ -62,7 +62,7 @@ export const useAuth = () => {
                     setIsAuthenticated(true)
                     setUserRole(response.role)
                     setUser(response.user)
-                    navigate("/")
+                   
                 }
             } catch (error) {
                 console.log("fetching user error:", error)

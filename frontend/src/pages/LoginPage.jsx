@@ -8,6 +8,7 @@ const LoginPage = () => {
     password: "",
   });
   const { loginHandler, loading } = useAuth();
+  const [errorMessage, setErrorMessage] = useState("");
   return (
     <section className="min-h-screen bg-[#F8F4EC] flex items-center justify-center px-6 py-10">
       <div className="w-full max-w-5xl bg-[#0F172A] rounded-3xl overflow-hidden shadow-2xl grid grid-cols-1 md:grid-cols-2">
@@ -36,9 +37,16 @@ const LoginPage = () => {
           </div>
 
           <form
-            onSubmit={(e) => {
+            onSubmit={async (e) => {
               e.preventDefault();
-              loginHandler(formData);
+              try {
+                await loginHandler(formData);
+              } catch (error) {
+                setErrorMessage(
+                  error.response.data.message ||
+                    error.response.data.errors[0].msg,
+                );
+              }
             }}
             className="space-y-6"
           >
@@ -71,6 +79,11 @@ const LoginPage = () => {
                 className="w-full rounded-2xl border border-slate-700 bg-[#1E293B] text-white placeholder:text-gray-400 px-5 py-4 outline-none focus:border-[#035A27] transition-all duration-300"
               />
             </div>
+            {errorMessage && (
+              <p className="text-red-500 font-semibold italic">
+                ⚠️ {errorMessage  }
+              </p>
+            )}
             {/* Button */}
             {loading ? (
               <p className="w-full text-center bg-[#035A27] text-[#F8F4EC] py-4 rounded-2xl text-lg font-semibold hover:scale-[1.02] transition-all duration-300">
