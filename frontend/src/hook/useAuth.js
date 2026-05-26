@@ -62,7 +62,7 @@ export const useAuth = () => {
                     setIsAuthenticated(true)
                     setUserRole(response.role)
                     setUser(response.user)
-                   
+
                 }
             } catch (error) {
                 console.log("fetching user error:", error)
@@ -71,9 +71,8 @@ export const useAuth = () => {
             }
         }
 
-        return () => {
-            fetchUser()
-        }
+        fetchUser()
+
     }, [])
 
     return { loading, isAuthenticated, userRole, loginHandler, logoutHandler, user, registerHandler }
