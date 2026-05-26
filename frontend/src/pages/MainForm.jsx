@@ -7,14 +7,24 @@ const MainForm = () => {
   const navigate = useNavigate();
   const { user, loading, logoutHandler } = useAuth();
   const { sendMessage, loading: messageLoading } = useMessage();
-  if (!loading && !user) navigate("/login");
+  useEffect(() => {
+    if (!loading && !user) {
+      navigate("/login");
+    }
+  }, [loading, user, navigate]);
   const [formData, setFormData] = useState({
     name: user?.name,
     email: user?.email,
     message: "",
   });
   useEffect(() => {
-    setFormData({ ...formData, name: user?.name, email: user?.email });
+    if (user) {
+      setFormData((prev) => ({
+        ...prev,
+        name: user.name,
+        email: user.email,
+      }));
+    }
   }, [user]);
 
   return (
@@ -41,8 +51,11 @@ const MainForm = () => {
           onSubmit={async (e) => {
             e.preventDefault();
             try {
-              sendMessage(formData);
-              formData.message = "";
+              await sendMessage(formData);
+              setFormData({
+                ...formData,
+                message: "",
+              });
               alert("Message sent successfully");
             } catch (error) {}
           }}
